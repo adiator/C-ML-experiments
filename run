@@ -1,1 +1,0 @@
-gcc -Iinclude main.c src/matrix.c src/nn.c -o mini_numpy && ./mini_numpy 
