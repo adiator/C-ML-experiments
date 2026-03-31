@@ -30,7 +30,7 @@ Matrix *matrix_init(size_t rows, size_t cols) {
 
 void matrix_fill(Matrix *mat, double num) {
   if (!mat) {
-    printf("Matrix doesn't exist\n");
+    printf("FILL: Matrix doesn't exist\n");
     return;
   }
 
@@ -43,11 +43,11 @@ void matrix_fill(Matrix *mat, double num) {
 
 void matrix_set(Matrix *mat, size_t row, size_t col, double num) {
   if (!mat) {
-    printf("Matrix doesn't exist\n");
+    printf("SET: Matrix doesn't exist\n");
     return;
   }
   if (row >= mat->rows || col >= mat->cols) {
-    printf("Invalid index\n");
+    printf("SET: Invalid index\n");
     return;
   }
 
@@ -59,11 +59,11 @@ void matrix_set(Matrix *mat, size_t row, size_t col, double num) {
 double matrix_get(Matrix *mat, size_t row, size_t col) {
 
   if (!mat) {
-    printf("Matrix doesn't exist\n");
+    printf("GET: Matrix doesn't exist\n");
     return 0.0;
   }
   if (row >= mat->rows || col >= mat->cols) {
-    printf("Invalid index\n");
+    printf("GET: Invalid index\n");
     return 0.0;
   }
 
@@ -101,12 +101,12 @@ void matrix_free(Matrix *mat) {
 
 Matrix *matrix_add(Matrix *mat1, Matrix *mat2) {
   if (!mat1 || !mat2) {
-    printf("Matrix/Matrices don't exist\n");
+    printf("ADD: Matrix/Matrices don't exist\n");
     return NULL;
   }
 
   if (mat1->rows != mat2->rows || mat1->cols != mat2->cols) {
-    printf("Matrices must be of the same shape\n");
+    printf("ADD: Matrices must be of the same shape\n");
     return NULL;
   }
 
@@ -128,12 +128,12 @@ Matrix *matrix_add(Matrix *mat1, Matrix *mat2) {
 
 Matrix *matrix_sub(Matrix *mat1, Matrix *mat2) {
   if (!mat1 || !mat2) {
-    printf("Matrix/Matrices don't exist\n");
+    printf("SUB: Matrix/Matrices don't exist\n");
     return NULL;
   }
 
   if (mat1->rows != mat2->rows || mat1->cols != mat2->cols) {
-    printf("Matrices must be of the same shape\n");
+    printf("SUB: Matrices must be of the same shape\n");
     return NULL;
   }
 
@@ -154,7 +154,7 @@ Matrix *matrix_sub(Matrix *mat1, Matrix *mat2) {
 }
 Matrix *matrix_scalar_mul(Matrix *mat, double scalar) {
   if (!mat) {
-    printf("Matrix/Matrices don't exist\n");
+    printf("SCALARMUL: Matrix/Matrices don't exist\n");
     return NULL;
   }
 
@@ -176,7 +176,7 @@ Matrix *matrix_scalar_mul(Matrix *mat, double scalar) {
 
 Matrix *matrix_scalar_add(Matrix *mat, double num) {
   if (!mat) {
-    printf("Matrix/Matrices don't exist\n");
+    printf("SCALARADD: Matrix/Matrices don't exist\n");
     return NULL;
   }
 
@@ -197,7 +197,7 @@ Matrix *matrix_scalar_add(Matrix *mat, double num) {
 
 Matrix *matrix_transpose(Matrix *mat) {
   if (!mat) {
-    printf("Matrix don't exist\n");
+    printf("TRANSPOSE: Matrix don't exist\n");
     return NULL;
   }
 
@@ -217,12 +217,12 @@ Matrix *matrix_transpose(Matrix *mat) {
 
 Matrix *matrix_matmul(Matrix *mat1, Matrix *mat2) {
   if (!mat1 || !mat2) {
-    printf("Matrix/Matrices don't exist\n");
+    printf("MATMUL: Matrix/Matrices don't exist\n");
     return NULL;
   }
 
   if (mat1->cols != mat2->rows) {
-    printf("Matrix shapes incompatible\n");
+    printf("MATMUL: Matrix shapes incompatible\n");
     return NULL;
   }
 
@@ -248,7 +248,7 @@ Matrix *matrix_matmul(Matrix *mat1, Matrix *mat2) {
 
 double matrix_total_sum(Matrix *mat) {
   if (!mat) {
-    printf("Matrix don't exist\n");
+    printf("TOTALSUM: Matrix don't exist\n");
     return 0.0;
   }
 
@@ -267,7 +267,7 @@ double matrix_total_sum(Matrix *mat) {
 
 Matrix *matrix_sum(Matrix *mat, size_t axis) {
   if (!mat) {
-    printf("Matrix don't exist\n");
+    printf("SUM: Matrix don't exist\n");
     return NULL;
   }
   Matrix *ans;
@@ -284,9 +284,9 @@ Matrix *matrix_sum(Matrix *mat, size_t axis) {
     for (size_t i = 0; i < mat->cols; i++) {
       double sum = 0.0;
       for (size_t j = 0; j < mat->rows; j++) {
-        sum += matrix_get(mat, i, j);
+        sum += matrix_get(mat, j, i);
       }
-      matrix_set(ans, 1, i, sum);
+      matrix_set(ans, 0, i, sum);
     }
 
   } else {
@@ -295,7 +295,7 @@ Matrix *matrix_sum(Matrix *mat, size_t axis) {
       for (size_t j = 0; j < mat->cols; j++) {
         sum += matrix_get(mat, i, j);
       }
-      matrix_set(ans, i, 1, sum);
+      matrix_set(ans, i, 0, sum);
     }
   }
 

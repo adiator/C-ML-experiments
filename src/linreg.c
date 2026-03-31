@@ -56,28 +56,18 @@ double loss(Array *x, Array *y, double w, double b) {
   return mse;
 }
 
-double update_w(Array *x, Array *y, double w, double b, double lr) {
+void training_step(Array *x, Array *y, double *w, double *b, double lr) {
+
   validate_dataset(x, y);
-  Array *f_pass = forward_pass(x, w, b);
+  Array *f_pass = forward_pass(x, *w, *b);
   if (!f_pass) {
-    return 0.0;
+    return;
+  }
+  Array *diff = array_sub(f_pass, y);
+  if (!diff) {
+    return;
   }
 
-  Array *diff = array_sub(f_pass, y);
-  if (!diff) {
-    return 0.0;
-  }
-  return w - lr * ((2.0 / diff->length) * (array_dot(diff, x)));
-}
-double update_b(Array *x, Array *y, double w, double b, double lr) {
-  validate_dataset(x, y);
-  Array *f_pass = forward_pass(x, w, b);
-  if (!f_pass) {
-    return 0.0;
-  }
-  Array *diff = array_sub(f_pass, y);
-  if (!diff) {
-    return 0.0;
-  }
-  return b - lr * ((2.0 / diff->length) * (array_sum(diff)));
+  *w -= lr * ((2.0 / diff->length) * (array_dot(diff, x)));
+  *b -= lr * ((2.0 / diff->length) * (array_sum(diff)));
 }

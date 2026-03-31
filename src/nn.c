@@ -5,7 +5,7 @@
 
 Matrix *relu(Matrix *mat) {
   if (!mat) {
-    printf("Matrix does not exist\n");
+    printf("RELU: Matrix does not exist\n");
     return NULL;
   }
   Matrix *result = matrix_init(mat->rows, mat->cols);
@@ -15,7 +15,9 @@ Matrix *relu(Matrix *mat) {
   for (size_t i = 0; i < mat->rows; i++) {
     for (size_t j = 0; j < mat->cols; j++) {
       if (matrix_get(mat, i, j) < 0) {
-        matrix_set(mat, i, j, 0);
+        matrix_set(result, i, j, 0);
+      } else {
+        matrix_set(result, i, j, matrix_get(mat, i, j));
       }
     }
   }
@@ -34,11 +36,11 @@ Matrix *set_param(size_t rows, size_t cols) {
 
 int validate_dataset(Matrix *x, Matrix *y) {
   if (!x) {
-    printf("X data does not exist\n");
+    printf("VALIDATION: X data does not exist\n");
     return 1;
   }
   if (!y) {
-    printf("X data does not exist\n");
+    printf("VALIDATION: X data does not exist\n");
     return 1;
   }
   if (x->cols == 0 || x->rows == 0 || y->cols == 0 || y->rows == 0) {
@@ -54,16 +56,16 @@ int validate_dataset(Matrix *x, Matrix *y) {
 
 Matrix *layer_one(Matrix *x_data, Matrix *w, Matrix *b) {
   if (!x_data) {
-    printf("Matrix does not exist\n");
+    printf("L1: Matrix does not exist\n");
     return NULL;
   }
   if (!w) {
-    printf("Matrix does not exist\n");
+    printf("L1: Matrix does not exist\n");
     return NULL;
   }
 
   if (!b) {
-    printf("Matrix does not exist\n");
+    printf("L1: Matrix does not exist\n");
     return NULL;
   }
 
@@ -78,11 +80,11 @@ Matrix *forward_pass(Matrix *x_data, Matrix *w1, Matrix *b1, Matrix *w2,
                      double b2) {
 
   if (!x_data) {
-    printf("Matrix does not exist\n");
+    printf("FP: Matrix does not exist\n");
     return NULL;
   }
   if (!w2) {
-    printf("Matrix does not exist\n");
+    printf("FP: Matrix does not exist\n");
     return NULL;
   }
 
@@ -103,6 +105,7 @@ Matrix *forward_pass(Matrix *x_data, Matrix *w1, Matrix *b1, Matrix *w2,
 Matrix *dl_dy(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
               Matrix *y) {
   if (validate_dataset(x, y)) {
+    printf("ERROR: dl_dy\n");
     return NULL;
   }
 
@@ -110,6 +113,7 @@ Matrix *dl_dy(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
       matrix_sub(forward_pass(x, w1, b1, w2, b2), y), 2.0 / x->cols);
 
   if (!ans) {
+    printf("ERROR: dl_dy\n");
     return NULL;
   }
   return ans;
@@ -119,12 +123,14 @@ Matrix *dl_dw2(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
                Matrix *y) {
 
   if (validate_dataset(x, y)) {
+    printf("ERROR: dl_dw2\n");
     return NULL;
   }
 
   Matrix *ans = matrix_matmul(matrix_transpose(layer_one(x, w1, b1)),
                               dl_dy(x, w1, b1, w2, b2, y));
   if (!ans) {
+    printf("ERROR: dl_dw2\n");
     return NULL;
   }
 
@@ -134,6 +140,7 @@ Matrix *dl_dw2(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
 double dl_db2(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
               Matrix *y) {
   if (validate_dataset(x, y)) {
+    printf("ERROR: dl_db2\n");
     return 0.0;
   }
 
@@ -143,16 +150,19 @@ double dl_db2(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
 Matrix *dl_dh(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
               Matrix *y) {
   if (validate_dataset(x, y)) {
+    printf("ERROR: dl_dh\n");
     return NULL;
   }
 
   Matrix *ans =
       matrix_matmul(w2, matrix_transpose(dl_dy(x, w1, b1, w2, b2, y)));
   if (!ans) {
+    printf("ERROR: dl_dh\n");
     return NULL;
   }
   Matrix *l1 = matrix_transpose(layer_one(x, w1, b1));
   if (!l1) {
+    printf("ERROR: dl_dh\n");
     return NULL;
   }
 
@@ -170,11 +180,13 @@ Matrix *dl_dh(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
 Matrix *dl_dw1(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
                Matrix *y) {
   if (validate_dataset(x, y)) {
+    printf("ERROR: dl_dw1\n");
     return NULL;
   }
   Matrix *ans = matrix_matmul(matrix_transpose(x),
                               matrix_transpose(dl_dh(x, w1, b1, w2, b2, y)));
   if (!ans) {
+    printf("ERROR: dl_dw1\n");
     return NULL;
   }
 
@@ -184,12 +196,14 @@ Matrix *dl_dw1(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
 Matrix *dl_db1(Matrix *x, Matrix *w1, Matrix *b1, Matrix *w2, double b2,
                Matrix *y) {
   if (validate_dataset(x, y)) {
+    printf("ERROR: dl_db1\n");
     return NULL;
   }
 
   Matrix *ans = matrix_sum(dl_dh(x, w1, b1, w2, b2, y), 0);
 
   if (!ans) {
+    printf("ERROR: dl_db1\n");
     return NULL;
   }
 

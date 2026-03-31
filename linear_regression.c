@@ -22,14 +22,11 @@ int main() {
   array_print(pred);
 
   for (int i = 0; i < 300; i++) {
-    w = update_w(x_data, y_data, w, b, lr);
-    b = update_b(x_data, y_data, w, b, lr);
-    // printf("%i -> %f\n", i + 1, loss(x_data, y_data, w, b));
+    training_step(x_data, y_data, &w, &b, lr);
   }
 
   pred = forward_pass(x_data, w, b);
 
-  // array_print(y_data);
   printf("%f\n", loss(x_data, y_data, w, b));
   array_print(pred);
 
